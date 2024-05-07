@@ -50,6 +50,22 @@
       margin-bottom: 20px;
       color: #333;
     }
+
+    .vet-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 400px;
+        margin: 0 auto; /* Ortala */
+        margin-top: 50px; /* Boşluk bırak */
+      }
+  
+      .vet-container h2 {
+        margin-bottom: 20px;
+        color: #333;
+      }
   </style>
 
   <body>
@@ -74,7 +90,7 @@
             <a class="nav-link" href="#">Notlar</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'vetPage' %}">Veterinerler</a>
+            <a class="nav-link" href="#">Veterinerler</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Hakkımızda</a>
@@ -87,14 +103,18 @@
       </div>
     </nav>
     <div class="container">
-      <h1 style="font-family: cursive;">Welcome to PawCare</h1>
-      <p style="margin-top: 30px;">Here at PawCare, we are dedicated to providing the best care for your pets. We offer a variety of services to help keep your pets healthy and happy. Our team of experienced professionals is here to help you with all of your pet care needs. Contact us today to learn more about our services and how we can help you and your pets.</p>
-      <div class="button-container">
-        <a href="{% url 'girisPage' %}" class="btn btn-giris custom-button" style="color: #fff;">Giriş Yap</a>
-        <div class="button-space"></div> <!-- Boşluk için -->
-        <a href="{% url 'kayitPage' %}" class="btn btn-kayit custom-button" style="color: white;">Kayıt Ol</a>
-      </div>
+      <h1 style="font-family: cursive; color:#B8486B">Anlaşmalı Olduğumuz Veterinerler</h1>
     </div>
+
+    {% for name, city, phone, address in zip_list %}
+    <div class="vet-container" style="font-family: cursive;">
+        <h2><strong>{{ name }}</strong></h2>
+        <p><strong>Şehir:</strong> {{ city }}</p>
+        <p><strong>Telefon:</strong> {{ phone }}</p>
+        <p><strong>Adres:</strong> {{ address }}</p>
+    </div>
+{% endfor %}
+
     
     
 
