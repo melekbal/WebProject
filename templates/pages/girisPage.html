@@ -83,7 +83,8 @@
     </nav>
   <div class="signup-container" style="font-family: cursive;">
     <h2 style="color: #B8486B;">PATİ GİRİŞİ</h2>
-    <form action="#" method="post">
+    <form action="{% url 'girisPage' %}" method="post">
+      {% csrf_token %}
       <div class="input-group">
         <label for="email">Pati Pasaport Numarası:</label>
         <input type="text" id="no" name="no" required />

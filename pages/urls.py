@@ -7,4 +7,8 @@ urlpatterns = [
     path('kayitPage/', views.kayitPage, name='kayitPage'),
     path('vetPage/', views.vetPage, name='vetPage'),
     path('iletisimPage/', views.iletisimPage, name='iletisimPage'),
+    path('kullaniciPage/', views.kullaniciPage, name='kullaniciPage'),
+    path('ilacPage/', views.ilacPage, name='ilacPage'),
+
+
 ]
