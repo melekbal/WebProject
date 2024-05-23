@@ -2,7 +2,7 @@
 <html lange="en">
   <head>
     <meta charset="UTF-8" />
-    <title>PawCare İletişim</title>
+    <title>PawCare</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous" />
   </head>
   <style>
@@ -41,7 +41,7 @@
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       text-align: center;
-      max-width: 500px;
+      max-width: 1000px;
       margin: 0 auto; /* Ortala */
       margin-top: 50px; /* Boşluk bırak */
     }
@@ -50,6 +50,22 @@
       margin-bottom: 20px;
       color: #333;
     }
+
+    .ilac-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 400px;
+        margin: 0 auto; /* Ortala */
+        margin-top: 50px; /* Boşluk bırak */
+      }
+  
+      .ilac-container h2 {
+        margin-bottom: 20px;
+        color: #333;
+      }
   </style>
 
   <body>
@@ -60,6 +76,18 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'home' %}">Anasayfa <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Randevular</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Aşı Takvimi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ilacPage' %}">İlaçlar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Notlar</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'vetPage' %}">Veterinerler</a>
@@ -75,19 +103,19 @@
       </div>
     </nav>
     <div class="container">
-      <h1 style="font-family: cursive; color:#B8486B">Bize Ulaşın</h1>
-      <p style="margin-top: 30px;"><strong>iletisim@pawcare.com.tr</strong></p>
-      <p style="margin-top: 30px;"><strong>0 850 123 45 67</strong></p>
+      <h1 style="font-family: cursive; color:#B8486B">Kullanılacak İlaçlar</h1>
     </div>
 
-
-    <!-- Bootstrap JS, Popper.js, and jQuery  ..............EKLENDİ......-->
-
-    <div class="container">
-      <h1 style="font-family: cursive; color:#B8486B">Bize Ulaşın</h1>
-      <p style="margin-top: 30px;"><strong>iletisim@pawcare.com.tr</strong></p>
-      <p style="margin-top: 30px;"><strong>0 850 123 45 67</strong></p>
+    {% for name, purpose, frequency, how, kullanim in zip_list %}
+    <div class="ilac-container" style="font-family: cursive;">
+        <h2><strong>{{ name }}</strong></h2>
+        <p><strong>Kullanım Amacı:</strong> {{ purpose }}</p>
+        <p><strong>Kullanım Sıklığı:</strong> {{ frequency }}</p>
+        <p><strong>Nasıl Kullanılacak:</strong> {{ how }}</p>
+        <p><strong>Kulanım Sahası:</strong> {{ kullanim }}</p>
     </div>
+{% endfor %}
+
     
     
 
