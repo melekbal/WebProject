@@ -9,10 +9,7 @@ urlpatterns = [
     path('iletisimPage/', views.iletisimPage, name='iletisimPage'),
     path('kullaniciPage/', views.kullaniciPage, name='kullaniciPage'),
     path('ilacPage/', views.ilacPage, name='ilacPage'),
-<<<<<<< HEAD
-    path('notPage/', views.notPage, name='notPage'),
-=======
->>>>>>> 45df169eca064828fa0865a4706e0498fb3a5a70
+    path('cikisYap/', views.cikisYap, name='cikisYap'),
 
 
 ]
