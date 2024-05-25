@@ -1,122 +1,165 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from pymongo import MongoClient
+from django.views import View
 from django.contrib.sessions.models import Session
+from .forms import IlacForm
 
-a= "12345"
-client = MongoClient("mongodb+srv://melekmbbal:"+a+"@cluster0.1b265hk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-db = client["PawCare"] # database
-collection = db["Veterinerler"] # collection
-collection2 = db["kullanicilar"] # collection
-collection3 = db["ilaclar"] # collection
+a = "12345"
+client = MongoClient("mongodb+srv://melekmbbal:" + a + "@cluster0.1b265hk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+db = client["PawCare"]  # database
+collection = db["Veterinerler"]  # collection
+collection2 = db["kullanicilar"]  # collection
+collection3 = db["ilaclar"]  # collection
 
 
-def pull_datas():
-        cursor = collection.find({})
+class MongoService:
+    def __init__(self, collection):
+        self.collection = collection
 
-        name_list = []
-        city_list = []
-        phone_list = []
-        address_list = []
+    def find_all(self):
+        return self.collection.find({})
 
+    def insert_one(self, document):
+        self.collection.insert_one(document)
+
+
+class VeterinerService(MongoService):
+    def __init__(self):
+        super().__init__(collection)
+
+    def pull_datas(self):
+        cursor = self.find_all()
+        return [(doc["name"], doc["city"], doc["phone"], doc["address"]) for doc in cursor]
+
+
+class KullaniciService(MongoService):
+    def __init__(self):
+        super().__init__(collection2)
+
+    def authorize_save(self, username, no, password):
+        self.insert_one({
+            "username": username,
+            "no": no,
+            "password": password
+        })
+
+    def authorize_check(self, no, password):
+        cursor = self.find_all()
         for document in cursor:
-                name_list.append(document["name"])
-                city_list.append(document["city"])
-                phone_list.append(document["phone"])
-                address_list.append(document["address"])
-                
-        zip_list = zip(name_list, city_list, phone_list, address_list)
-                
-        return zip_list
-    
-def authorize_save(username, no, password):
-    collection2.insert_one({
-        "username": username,
-        "no": no,
-        "password": password
-    })
-    
-def authorize_check(no, password):
-    cursor = collection2.find({})
-    
-    for document in cursor:
-        if document["no"] == no and document["password"] == password:
-            return True
-    return False
-        
+            if document["no"] == no and document["password"] == password:
+                return True
+        return False
 
 
-def home(request):
-    return render(request, 'pages/home.html')  
+class IlacService(MongoService):
+    def __init__(self):
+        super().__init__(collection3)
 
-def kullaniciPage(request):
-    username = request.session.get('username', None)
-    if username:
-        # Oturumda kullanıcı adı varsa, kullanıcı sayfasını göster
-        return render(request, 'pages/kullaniciPage.html', {'name': username})
-    else:
-        # Kullanıcı oturumu yoksa, giriş sayfasına yönlendir
+    def pull_datas(self):
+        cursor = self.find_all()
+        return [(doc["name"], doc["purpose"], doc["frequency"], doc["how"], doc["kullanim"]) for doc in cursor]
+
+
+class HomeView(View):
+    def get(self, request):
+        return render(request, 'pages/home.html')
+
+
+class KullaniciPageView(View):
+    def get(self, request):
+        username = request.session.get('username', None)
+        if username:
+            return render(request, 'pages/kullaniciPage.html', {'name': username})
+        else:
+            return render(request, 'pages/girisPage.html')
+
+
+class GirisPageView(View):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.kullanici_service = KullaniciService()
+
+    def get(self, request):
         return render(request, 'pages/girisPage.html')
 
-def girisPage(request):
-    if request.method == 'POST':
+    def post(self, request):
         no = request.POST.get('no', '')
         sifre = request.POST.get('password', '')
-        
-        if authorize_check(no, sifre):
+
+        if self.kullanici_service.authorize_check(no, sifre):
             name = collection2.find_one({"no": no})["username"]
             request.session['username'] = name
-
             return render(request, 'pages/kullaniciPage.html', {'name': name})
-        
-    return render(request, 'pages/girisPage.html')
 
-def kayitPage(request):
-    if request.method == 'POST':
+        return render(request, 'pages/girisPage.html')
+
+
+class KayitPageView(View):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.kullanici_service = KullaniciService()
+
+    def get(self, request):
+        return render(request, 'pages/kayitPage.html')
+
+    def post(self, request):
         patiAdi = request.POST.get('username', '')
         no = request.POST.get('no', '')
         sifre = request.POST.get('password', '')
-        
-        authorize_save(patiAdi, no, sifre)
-        
-    return render(request, 'pages/kayitPage.html')
 
-def iletisimPage(request):
-    return render(request, 'pages/iletisimPage.html')
+        self.kullanici_service.authorize_save(patiAdi, no, sifre)
 
-def vetPage(request):
-    zip_list = pull_datas()
-    context = {
-                    'zip_list': zip_list
-            }
-    return render(request, 'pages/vetPage.html', context)
+        return render(request, 'pages/kayitPage.html')
 
-def ilacPage(request):
-    cursor = collection3.find({})
 
-    name_list = []
-    purpose_list = []
-    frequency_list = []
-    how_list = []
-    kullanim_list = []
+class IletisimPageView(View):
+    def get(self, request):
+        return render(request, 'pages/iletisimPage.html')
 
-    for document in cursor:
-        name_list.append(document["name"])
-        purpose_list.append(document["purpose"])
-        frequency_list.append(document["frequency"])
-        how_list.append(document["how"])
-        kullanim_list.append(document["kullanim"])
-                
-    zip_list = zip(name_list, purpose_list, frequency_list, how_list, kullanim_list)
-                
-    context = {
-                    'zip_list': zip_list
-            }
-    return render(request, 'pages/ilacPage.html', context)
 
-def cikisYap(request):
-    # Oturumu temizle
-    if 'username' in request.session:
-        del request.session['username']
-    # Çıkış yaptıktan sonra ana sayfaya yönlendir
-    return render(request, 'pages/girisPage.html')
+class VetPageView(View):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.veteriner_service = VeterinerService()
+
+    def get(self, request):
+        zip_list = self.veteriner_service.pull_datas()
+        context = {
+            'zip_list': zip_list
+        }
+        return render(request, 'pages/vetPage.html', context)
+
+
+class IlacPageView(View):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.ilac_service = IlacService()
+
+    def get(self, request):
+        zip_list = self.ilac_service.pull_datas()
+        form = IlacForm()
+        context = {
+            'zip_list': zip_list,
+            'form': form
+        }
+        return render(request, 'pages/ilacPage.html', context)
+
+    def post(self, request):
+        form = IlacForm(request.POST)
+        if form.is_valid():
+            self.ilac_service.insert_one(form.cleaned_data)
+            return redirect('ilacPage')
+        zip_list = self.ilac_service.pull_datas()
+        context = {
+            'zip_list': zip_list,
+            'form': form
+        }
+        return render(request, 'pages/ilacPage.html', context)
+
+
+class CikisYapView(View):
+    def get(self, request):
+        if 'username' in request.session:
+            del request.session['username']
+        return render(request, 'pages/girisPage.html')
