@@ -9,6 +9,7 @@ urlpatterns = [
     path('iletisimPage/', views.iletisimPage, name='iletisimPage'),
     path('kullaniciPage/', views.kullaniciPage, name='kullaniciPage'),
     path('ilacPage/', views.ilacPage, name='ilacPage'),
+    path('cikisYap/', views.cikisYap, name='cikisYap'),
 
 
 ]
