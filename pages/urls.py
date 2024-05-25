@@ -1,15 +1,17 @@
 from django.urls import path
-from . import views
+from .views import (
+    HomeView, KullaniciPageView, GirisPageView, 
+    KayitPageView, IletisimPageView, VetPageView, 
+    IlacPageView, CikisYapView
+)
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('girisPage/', views.girisPage, name='girisPage'),
-    path('kayitPage/', views.kayitPage, name='kayitPage'),
-    path('vetPage/', views.vetPage, name='vetPage'),
-    path('iletisimPage/', views.iletisimPage, name='iletisimPage'),
-    path('kullaniciPage/', views.kullaniciPage, name='kullaniciPage'),
-    path('ilacPage/', views.ilacPage, name='ilacPage'),
-    path('cikisYap/', views.cikisYap, name='cikisYap'),
-
-
+    path('', HomeView.as_view(), name='home'),
+    path('kullanici/', KullaniciPageView.as_view(), name='kullaniciPage'),
+    path('giris/', GirisPageView.as_view(), name='girisPage'),
+    path('kayit/', KayitPageView.as_view(), name='kayitPage'),
+    path('iletisim/', IletisimPageView.as_view(), name='iletisimPage'),
+    path('vet/', VetPageView.as_view(), name='vetPage'),
+    path('ilac/', IlacPageView.as_view(), name='ilacPage'),
+    path('cikis/', CikisYapView.as_view(), name='cikisYap'),
 ]
