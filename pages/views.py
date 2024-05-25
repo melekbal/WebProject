@@ -14,7 +14,11 @@ collection3 = db["ilaclar"]  # collection
 
 
 class MongoService:
+<<<<<<< HEAD
     def __init__(self, collection):
+=======
+    def _init_(self, collection):
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
         self.collection = collection
 
     def find_all(self):
@@ -25,8 +29,13 @@ class MongoService:
 
 
 class VeterinerService(MongoService):
+<<<<<<< HEAD
     def __init__(self):
         super().__init__(collection)
+=======
+    def _init_(self):
+        super()._init_(collection)
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
 
     def pull_datas(self):
         cursor = self.find_all()
@@ -34,8 +43,13 @@ class VeterinerService(MongoService):
 
 
 class KullaniciService(MongoService):
+<<<<<<< HEAD
     def __init__(self):
         super().__init__(collection2)
+=======
+    def _init_(self):
+        super()._init_(collection2)
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
 
     def authorize_save(self, username, no, password):
         self.insert_one({
@@ -53,8 +67,13 @@ class KullaniciService(MongoService):
 
 
 class IlacService(MongoService):
+<<<<<<< HEAD
     def __init__(self):
         super().__init__(collection3)
+=======
+    def _init_(self):
+        super()._init_(collection3)
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
 
     def pull_datas(self):
         cursor = self.find_all()
@@ -76,8 +95,13 @@ class KullaniciPageView(View):
 
 
 class GirisPageView(View):
+<<<<<<< HEAD
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+=======
+    def _init_(self, **kwargs):
+        super()._init_(**kwargs)
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
         self.kullanici_service = KullaniciService()
 
     def get(self, request):
@@ -96,8 +120,13 @@ class GirisPageView(View):
 
 
 class KayitPageView(View):
+<<<<<<< HEAD
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+=======
+    def _init_(self, **kwargs):
+        super()._init_(**kwargs)
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
         self.kullanici_service = KullaniciService()
 
     def get(self, request):
@@ -119,8 +148,13 @@ class IletisimPageView(View):
 
 
 class VetPageView(View):
+<<<<<<< HEAD
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+=======
+    def _init_(self, **kwargs):
+        super()._init_(**kwargs)
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
         self.veteriner_service = VeterinerService()
 
     def get(self, request):
@@ -132,12 +166,18 @@ class VetPageView(View):
 
 
 class IlacPageView(View):
+<<<<<<< HEAD
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+=======
+    def _init_(self, **kwargs):
+        super()._init_(**kwargs)
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
         self.ilac_service = IlacService()
 
     def get(self, request):
         zip_list = self.ilac_service.pull_datas()
+<<<<<<< HEAD
         form = IlacForm()
         context = {
             'zip_list': zip_list,
@@ -154,6 +194,10 @@ class IlacPageView(View):
         context = {
             'zip_list': zip_list,
             'form': form
+=======
+        context = {
+            'zip_list': zip_list
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
         }
         return render(request, 'pages/ilacPage.html', context)
 
@@ -162,4 +206,8 @@ class CikisYapView(View):
     def get(self, request):
         if 'username' in request.session:
             del request.session['username']
+<<<<<<< HEAD
         return render(request, 'pages/girisPage.html')
+=======
+        return render(request, 'pages/girisPage.html')
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da

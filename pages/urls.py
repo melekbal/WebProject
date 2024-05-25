@@ -15,4 +15,8 @@ urlpatterns = [
     path('vet/', VetPageView.as_view(), name='vetPage'),
     path('ilac/', IlacPageView.as_view(), name='ilacPage'),
     path('cikis/', CikisYapView.as_view(), name='cikisYap'),
+<<<<<<< HEAD
 ]
+=======
+]
+>>>>>>> c1c04a3005951f758ebff7e869da4e15dfb5c9da
